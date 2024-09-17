@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Incident - Billet{% endblock %}
+
+{% block body %}
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <h1>Incident Report #{{ incident.reference }}</h1>
+            <p class="incident-date">Date : {{ incident.createdAt ? incident.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</p>
+        </div>
+
+        <div class="ticket-body">
+            <div class="ticket-details">
+                <p><strong>Description :</strong> {{ incident.description }}</p>
+                <p><strong>Status :</strong> <span class="status {{ incident.status.value|lower }}">{{ incident.status.value }}</span></p>
+                <p><strong>Priority :</strong> <span class="priority {{ incident.priority.value|lower }}">{{ incident.priority.value }}</span></p>
+                <p><strong>Types :</strong> {{ incident.types |map(t => t.value)|join(', ') }}</p>
+            </div>
+
+            <div class="ticket-qr">
+                <p><strong>Reported by :</strong> {{ incident.reporterEmail }}</p>
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            <div class="ticket-actions">
+                <a href="{{ path('app_incident_edit', {'id': incident.id}) }}" class="btn btn-primary">Edit</a>
+                <a href="{{ path('app_incident_process', {id: incident.id}) }}" class="btn btn-outline-primary">Handle Incident</a>
+                <a href="{{ path('app_incident_resolve', {id: incident.id}) }}" class="btn btn-outline-success">Resolve Incident</a>
+                <a href="{{ path('app_incident_reject', {id: incident.id}) }}" class="btn btn-outline-danger">Reject Incident</a>
+            </div>
+            <div class="back-to-list">
+                <a href="{{ path('app_incident_index') }}" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .ticket-container {
+            width: 600px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+
+        .ticket-header {
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .ticket-body {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ticket-details {
+            width: 60%;
+        }
+
+        .ticket-qr {
+            width: 30%;
+            text-align: center;
+        }
+
+        .ticket-qr img {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+
+        .status.in_progress { color: #17a2b8; }
+        .status.resolved { color: #28a745; }
+        .status.rejected { color: #dc3545; }
+
+        .priority.high { color: #ff0000; }
+        .priority.medium { color: #ffa500; }
+        .priority.low { color: #28a745; }
+
+        .ticket-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ticket-actions a {
+            margin-right: 10px;
+        }
+    </style>
+{% endblock %}
